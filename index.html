@@ -34,16 +34,126 @@ a{color:#ffffff}a:hover{color:#ffffff}
 .mv-scan{background-image:repeating-linear-gradient(0deg,rgba(0,0,0,0.10) 0px,rgba(0,0,0,0.10) 1px,transparent 1px,transparent 3px)}
 .mv-app:hover .mv-app-label,.mv-app:focus-visible .mv-app-label{background:#1f0080;outline:1px dotted #ffffff}
 
+
+/* --- App icons: no pulsing glow; green highlight on hover --- */
+.mv-app{cursor:pointer}
+.mv-app img{
+  outline:2px solid rgba(255,255,255,0);
+  outline-offset:3px;
+  /* Lives here rather than inline so :hover can actually override it */
+  box-shadow:0 2px 0 rgba(0,0,0,0.35);
+  transition:transform .14s ease, box-shadow .14s ease, outline-color .14s ease;
+}
+.mv-app:hover img,.mv-app:focus-visible img{
+  transform:scale(1.14);
+  outline-color:#ffffff;
+  box-shadow:0 2px 0 rgba(0,0,0,0.35), 0 0 16px 5px rgba(60,224,130,0.8);
+}
+.mv-app:active img{transform:scale(0.96)}
+.mv-app .mv-app-label{border-radius:2px;text-align:center}
+.mv-app:hover .mv-app-label,.mv-app:focus-visible .mv-app-label{background:#1f0080;outline:1px dotted #ffffff}
+
+/* Ghost cursor drifting over the screen, pausing to click each icon.
+   Targets are the icon centres in screen-inner coordinates. */
+.mv-cursor{position:absolute;left:0;top:0;width:0;height:0;z-index:7;pointer-events:none}
+.mv-cursor .mv-ptr{
+  position:absolute;left:-1px;top:-1px;
+  display:block;
+  transform-origin:0 0;
+  filter:drop-shadow(0 1px 2px rgba(0,0,0,0.85));
+  animation:mv-cursor-click 12s ease-in-out infinite;
+}
+.mv-cursor .mv-ring{
+  position:absolute;
+  border:2px solid #ffffff;
+  border-radius:50%;
+  opacity:0;
+  animation:mv-cursor-ring 12s ease-in-out infinite;
+}
+.mv-cursor-d{animation:mv-cursor-d 12s ease-in-out infinite}
+.mv-cursor-m{animation:mv-cursor-m 12s ease-in-out infinite}
+
+/* Desktop icon centres: 66,44 / 66,140 / 66,236 / 184,236 */
+@keyframes mv-cursor-d{
+  0%  {transform:translate(340px,300px)}
+  8%  {transform:translate(66px,44px)}
+  14% {transform:translate(66px,44px)}
+  22% {transform:translate(66px,140px)}
+  28% {transform:translate(66px,140px)}
+  36% {transform:translate(66px,236px)}
+  42% {transform:translate(66px,236px)}
+  50% {transform:translate(184px,236px)}
+  56% {transform:translate(184px,236px)}
+  70% {transform:translate(392px,118px)}
+  86% {transform:translate(300px,292px)}
+  100%{transform:translate(340px,300px)}
+}
+/* Mobile icon centres: 50,32 / 50,105 / 50,177 / 148,177 */
+@keyframes mv-cursor-m{
+  0%  {transform:translate(236px,212px)}
+  8%  {transform:translate(50px,32px)}
+  14% {transform:translate(50px,32px)}
+  22% {transform:translate(50px,105px)}
+  28% {transform:translate(50px,105px)}
+  36% {transform:translate(50px,177px)}
+  42% {transform:translate(50px,177px)}
+  50% {transform:translate(148px,177px)}
+  56% {transform:translate(148px,177px)}
+  70% {transform:translate(244px,62px)}
+  86% {transform:translate(210px,214px)}
+  100%{transform:translate(236px,212px)}
+}
+/* The press itself — squishes toward the tip on arrival */
+@keyframes mv-cursor-click{
+  0%,8%{transform:scale(1)}
+  10%  {transform:scale(0.82)}
+  12%  {transform:scale(1)}
+  22%  {transform:scale(1)}
+  24%  {transform:scale(0.82)}
+  26%  {transform:scale(1)}
+  36%  {transform:scale(1)}
+  38%  {transform:scale(0.82)}
+  40%  {transform:scale(1)}
+  50%  {transform:scale(1)}
+  52%  {transform:scale(0.82)}
+  54%  {transform:scale(1)}
+  100% {transform:scale(1)}
+}
+/* Ripple that fires with each press */
+@keyframes mv-cursor-ring{
+  0%,9%{opacity:0;transform:scale(0.3)}
+  10%  {opacity:0.85;transform:scale(0.3)}
+  16%  {opacity:0;transform:scale(1.7)}
+  23%  {opacity:0;transform:scale(0.3)}
+  24%  {opacity:0.85;transform:scale(0.3)}
+  30%  {opacity:0;transform:scale(1.7)}
+  37%  {opacity:0;transform:scale(0.3)}
+  38%  {opacity:0.85;transform:scale(0.3)}
+  44%  {opacity:0;transform:scale(1.7)}
+  51%  {opacity:0;transform:scale(0.3)}
+  52%  {opacity:0.85;transform:scale(0.3)}
+  58%  {opacity:0;transform:scale(1.7)}
+  100% {opacity:0;transform:scale(0.3)}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .mv-cursor{display:none}
+}
 </style>
 </head>
 <body>
 <div id="scene-desktop" class="scene" style="position: absolute; width: 1280px; height: 800px; overflow: hidden; background-color: #0d0d0f; font-family: 'VT323', 'Courier New', monospace">
 
-<div style="position: absolute; left: 54px; top: 112px; width: 270px; height: 252px; transform: rotate(-2deg); transform-origin: 50% 0">
+<div style="position: absolute; left: 22px; top: 112px; width: 270px; height: 276px; transform: rotate(-2deg); transform-origin: 50% 0">
 <svg aria-hidden="true" viewBox="0 0 270 44" style="position: absolute; left: 0; top: 0; width: 270px; height: 44px"><path d="M 59 43 L 135 3 L 211 43" fill="none" stroke="#8a8a90" stroke-width="1.5"></path><circle cx="135" cy="3" r="3" fill="#b9b9bd"></circle></svg>
-<div style="position: absolute; left: 0; top: 40px; width: 270px; height: 212px; box-sizing: border-box; background: #f4f1ea; border: 9px solid #1c1c1f; box-shadow: 0 0 0 1px #2e2e33, 6px 8px 14px rgba(0,0,0,0.6); padding: 10px">
-<img src="team.jpg" alt="Maximus with the FourMeasure team in his office" style="display: block; width: 232px; height: 174px; object-fit: cover">
+<div style="position: absolute; left: 0; top: 40px; width: 270px; height: 212px; box-sizing: border-box; background: #f4f1ea; border: 9px solid #4B1FD1; box-shadow: 0 0 0 1px #2a0f7a, inset 0 0 0 1px #8a63f5, 6px 9px 18px rgba(0,0,0,0.62), 0 0 22px rgba(75,31,209,0.3); padding: 10px">
+<div style="position: relative; width: 232px; height: 174px">
+<img src="team.jpg" alt="Maximus with the FourMeasure team in his office" style="display: block; width: 232px; height: 174px; object-fit: cover; filter: contrast(1.05) saturate(1.06)">
+<div aria-hidden="true" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; pointer-events: none; background: linear-gradient(118deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.045) 22%, rgba(255,255,255,0) 40%, rgba(255,255,255,0) 70%, rgba(255,255,255,0.035) 84%, rgba(255,255,255,0) 100%)"></div>
+<div aria-hidden="true" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; pointer-events: none; box-shadow: inset 0 0 22px rgba(0,0,0,0.4), inset 0 3px 6px rgba(0,0,0,0.5), inset 0 -1px 3px rgba(0,0,0,0.3)"></div>
 </div>
+</div>
+<div aria-hidden="true" style="position: absolute; left: 50%; top: 257px; transform: translateX(-50%); padding: 4px 11px 3px; background: linear-gradient(180deg, #6a3df0 0%, #3d17ae 100%); border: 1px solid #2a0f7a; border-radius: 2px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.35), 0 4px 9px rgba(0,0,0,0.6); font-family: 'Press Start 2P', monospace; font-size: 7px; line-height: 1; letter-spacing: 0.12em; color: #f1ebff; white-space: nowrap">FOURMEASURE TEAM</div>
 </div>
 
 <svg role="img" aria-label="Canadian flag" viewBox="0 0 40 20" preserveAspectRatio="none" style="position: absolute; left: 984px; top: 160px; width: 130px; height: 65px; transform: rotate(-3deg); filter: drop-shadow(4px 5px 6px rgba(0,0,0,0.6))">
@@ -57,46 +167,42 @@ a{color:#ffffff}a:hover{color:#ffffff}
 <circle cx="1.2" cy="1.2" r="0.7" fill="#9a9aa0"></circle><circle cx="36.8" cy="1.2" r="0.7" fill="#9a9aa0"></circle>
 </svg>
 
-<div aria-hidden="true" style="position: absolute; left: 58px; top: 30px; width: 122px; height: 50px; transform: rotate(-3deg); transform-origin: 0 50%; filter: drop-shadow(3px 4px 4px rgba(0,0,0,0.6))">
-<div style="position: absolute; inset: 0; background: #68ACE5; clip-path: polygon(0 0, 100% 50%, 0 100%)"></div>
-<div style="position: absolute; left: 0; top: 3px; right: 7px; bottom: 3px; background: #002D72; clip-path: polygon(0 0, 100% 50%, 0 100%)"></div>
-<div style="position: absolute; left: 0; top: 0; width: 8px; height: 100%; background: #f4f1ea"></div>
-<div style="position: absolute; left: 13px; top: 50%; transform: translateY(-50%); font-family: 'Press Start 2P', monospace; font-size: 9px; line-height: 1.6; letter-spacing: 0.04em; color: #ffffff">JOHNS<br>HOPKINS</div>
-<div style="position: absolute; left: 2px; top: -3px; width: 5px; height: 5px; border-radius: 50%; background: #c8312a"></div>
-</div>
-<div aria-hidden="true" style="position: absolute; left: 192px; top: 34px; width: 120px; height: 50px; transform: rotate(2deg); transform-origin: 0 50%; filter: drop-shadow(3px 4px 4px rgba(0,0,0,0.6))">
-<div style="position: absolute; inset: 0; background: #F47321; clip-path: polygon(0 0, 100% 50%, 0 100%)"></div>
-<div style="position: absolute; left: 0; top: 3px; right: 7px; bottom: 3px; background: #005030; clip-path: polygon(0 0, 100% 50%, 0 100%)"></div>
-<div style="position: absolute; left: 0; top: 0; width: 8px; height: 100%; background: #f4f1ea"></div>
-<div style="position: absolute; left: 13px; top: 50%; transform: translateY(-50%); font-family: 'Press Start 2P', monospace; font-size: 12px; line-height: 1; letter-spacing: 0.04em; color: #ffffff">MIAMI</div>
-<div style="position: absolute; left: 2px; top: -3px; width: 5px; height: 5px; border-radius: 50%; background: #c8312a"></div>
-</div>
 
 <div aria-hidden="true" style="position: absolute; left: 0; right: 0; top: 600px; bottom: 0; background: #1a1a1d; border-top: 6px solid #2e2e33"></div>
 
-<svg aria-hidden="true" viewBox="0 0 1280 800" style="position: absolute; left: 0; top: 0; width: 1280px; height: 800px; pointer-events: none"><path d="M 540 654 C 540 628, 580 640, 600 600" fill="none" stroke="#b9ad92" stroke-width="6" stroke-linecap="round"></path><path d="M 540 654 C 540 628, 580 640, 600 600" fill="none" stroke="#e9e1cf" stroke-width="3" stroke-linecap="round"></path><path d="M 964 678 C 966 646, 912 652, 872 636 S 812 612, 780 600" fill="none" stroke="#b9ad92" stroke-width="6" stroke-linecap="round"></path><path d="M 964 678 C 966 646, 912 652, 872 636 S 812 612, 780 600" fill="none" stroke="#e9e1cf" stroke-width="3" stroke-linecap="round"></path></svg>
+<svg aria-hidden="true" viewBox="0 0 1280 800" style="position: absolute; left: 0; top: 0; width: 1280px; height: 800px; pointer-events: none"><path d="M 540 690 C 540 658, 582 648, 606 606" fill="none" stroke="#b9ad92" stroke-width="6" stroke-linecap="round"></path><path d="M 540 690 C 540 658, 582 648, 606 606" fill="none" stroke="#e9e1cf" stroke-width="3" stroke-linecap="round"></path><path d="M 962 708 C 966 672, 910 656, 872 638 S 812 612, 782 604" fill="none" stroke="#b9ad92" stroke-width="6" stroke-linecap="round"></path><path d="M 962 708 C 966 672, 910 656, 872 638 S 812 612, 782 604" fill="none" stroke="#e9e1cf" stroke-width="3" stroke-linecap="round"></path></svg>
 <div aria-hidden="true" style="position: absolute; left: 530px; top: 556px; width: 220px; height: 40px; background: #e3d9c3; border-left: 3px solid #c9bc9f; border-right: 3px solid #c9bc9f; box-sizing: border-box"></div>
 <div aria-hidden="true" style="position: absolute; left: 470px; top: 588px; width: 340px; height: 24px; box-sizing: border-box; background: #efe6d2; border: 3px solid #c9bc9f; border-radius: 12px 12px 6px 6px; box-shadow: inset 0 -6px 0 #ddd1b7"></div>
 
 <div style="position: absolute; left: 340px; top: 60px; width: 600px; height: 500px; box-sizing: border-box; background: #efe6d2; border: 3px solid #c9bc9f; border-radius: 24px; box-shadow: inset -12px -12px 0 #ddd1b7, inset 6px 6px 0 #faf5ea; padding: 36px 40px 0 40px">
 
-<div style="position: relative; width: 514px; height: 380px; box-sizing: border-box; border: 8px solid #d4c8ad; border-radius: 16px; overflow: hidden; background: #0e0e11; box-shadow: inset 0 0 40px rgba(0,0,0,0.45)">
+<div style="position: relative; width: 514px; height: 380px; box-sizing: border-box; border: 8px solid #d4c8ad; border-radius: 16px; overflow: hidden; background: #0e0e11 url('wallpaper-bliss.jpg') center center / cover no-repeat; box-shadow: inset 0 0 40px rgba(0,0,0,0.45)">
 <div class="mv-scan" aria-hidden="true" style="position: absolute; inset: 0; pointer-events: none; z-index: 20; box-shadow: inset 0 0 40px rgba(0,0,0,0.4)"></div>
 
 <nav aria-label="Apps" style="position: absolute; left: 18px; top: 16px; display: flex; flex-direction: column; gap: 14px; z-index: 5">
-<a class="mv-app" target="_blank" rel="noopener noreferrer" href="https://apps.apple.com/us/app/fourmeasure/id6754608076" style="display: flex; flex-direction: column; align-items: center; gap: 5px; width: 96px; text-decoration: none; color: #ffffff">
-<img src="icon-fourmeasure.webp" alt="" style="display: block; width: 56px; height: 56px; border-radius: 22%; box-shadow: 0 2px 0 rgba(0,0,0,0.35)">
+<a class="mv-app" target="_blank" rel="noopener noreferrer" href="https://app.fourmeasure.com/maximus" style="display: flex; flex-direction: column; align-items: center; gap: 5px; width: 96px; text-decoration: none; color: #ffffff">
+<img src="icon-fourmeasure.webp" alt="" style="display: block; width: 56px; height: 56px; border-radius: 22%">
 <span class="mv-app-label" style="padding: 0 4px; font-family: 'VT323', monospace; font-size: 19px; line-height: 1.1; letter-spacing: 1px; text-shadow: 1px 1px 0 #000000">FourMeasure</span>
 </a>
 <a class="mv-app" target="_blank" rel="noopener noreferrer" href="https://www.instagram.com/maximussss__/" style="display: flex; flex-direction: column; align-items: center; gap: 5px; width: 96px; text-decoration: none; color: #ffffff">
-<img src="icon-instagram.webp" alt="" style="display: block; width: 56px; height: 56px; border-radius: 22%; box-shadow: 0 2px 0 rgba(0,0,0,0.35)">
+<img src="icon-instagram-retro.png" alt="" style="display: block; width: 56px; height: 56px; border-radius: 22%">
 <span class="mv-app-label" style="padding: 0 4px; font-family: 'VT323', monospace; font-size: 19px; line-height: 1.1; letter-spacing: 1px; text-shadow: 1px 1px 0 #000000">Instagram</span>
 </a>
 <a class="mv-app" target="_blank" rel="noopener noreferrer" href="https://www.linkedin.com/in/maximus-vickers-bb69672b1" style="display: flex; flex-direction: column; align-items: center; gap: 5px; width: 96px; text-decoration: none; color: #ffffff">
-<img src="icon-linkedin.webp" alt="" style="display: block; width: 56px; height: 56px; border-radius: 22%; box-shadow: 0 2px 0 rgba(0,0,0,0.35)">
+<img src="icon-linkedin.webp" alt="" style="display: block; width: 56px; height: 56px; border-radius: 22%">
 <span class="mv-app-label" style="padding: 0 4px; font-family: 'VT323', monospace; font-size: 19px; line-height: 1.1; letter-spacing: 1px; text-shadow: 1px 1px 0 #000000">LinkedIn</span>
 </a>
 </nav>
+<a class="mv-app" target="_blank" rel="noopener noreferrer" href="https://poker-mentor-ten.vercel.app/" style="position: absolute; left: 128px; top: 208px; display: flex; flex-direction: column; align-items: center; gap: 5px; width: 112px; text-decoration: none; color: #ffffff; z-index: 5">
+<img src="icon-pocket-theory.png" alt="" style="display: block; width: 56px; height: 56px; border-radius: 22%">
+<span class="mv-app-label" style="padding: 0 4px; font-family: 'VT323', monospace; font-size: 19px; line-height: 1.1; letter-spacing: 1px; text-shadow: 1px 1px 0 #000000">Pocket Theory</span>
+</a>
+<div class="mv-cursor mv-cursor-d" aria-hidden="true">
+<span class="mv-ring" style="left: -10px; top: -10px; width: 20px; height: 20px"></span>
+<svg class="mv-ptr" viewBox="0 0 12 18" style="width: 13px; height: 19px">
+<path d="M1 1 L1 15 L4.6 11.6 L7 16.8 L9.4 15.7 L7.1 10.7 L11.4 10.5 Z" fill="#ffffff" stroke="#15161a" stroke-width="1.2" stroke-linejoin="round"></path>
+</svg>
+</div>
 
 <div style="position: absolute; left: 0; right: 0; bottom: 0; height: 34px; box-sizing: border-box; background: #cdc6b4; border-top: 2px solid #f6f2e8; display: flex; align-items: center; justify-content: space-between; padding: 0 6px; z-index: 10">
 <button type="button" style="display: flex; align-items: center; gap: 6px; height: 26px; padding: 0 8px; background: #cdc6b4; border: 2px solid; border-color: #f6f2e8 #6e675a #6e675a #f6f2e8; font-family: 'Press Start 2P', monospace; font-size: 10px; color: #1a1a1a; cursor: pointer">
@@ -134,7 +240,10 @@ START
 <p style="margin: 0; font-family: 'Permanent Marker', cursive; font-size: 12px; line-height: 1.2; text-align: center; color: #2a2a2e">The future belongs to those that build it.</p>
 </div>
 
-<div aria-hidden="true" style="position: absolute; left: 380px; top: 650px; width: 520px; height: 104px; box-sizing: border-box; background: #efe6d2; border: 3px solid #c9bc9f; border-radius: 10px; box-shadow: inset -6px -6px 0 #ddd1b7; padding: 10px 12px; display: grid; grid-template-columns: repeat(14, minmax(0, 1fr)); gap: 5px">
+<div aria-hidden="true" style="position: absolute; left: 380px; top: 656px; width: 520px; height: 98px">
+<div style="position: absolute; left: 16px; right: 16px; bottom: -7px; height: 15px; border-radius: 50%; background: rgba(0,0,0,0.65); filter: blur(7px)"></div>
+<div style="position: absolute; left: 10px; right: 10px; bottom: 0; height: 17px; background: linear-gradient(180deg, #e2d7bf 0%, #bdb094 100%); border-radius: 0 0 9px 9px; box-shadow: inset 0 -2px 0 #a2957b"></div>
+<div style="position: absolute; left: 0; bottom: 13px; width: 520px; height: 104px; box-sizing: border-box; background: #efe6d2; border: 3px solid #c9bc9f; border-radius: 10px; box-shadow: inset -6px -6px 0 #ddd1b7; padding: 10px 12px; display: grid; grid-template-columns: repeat(14, minmax(0, 1fr)); gap: 5px; transform: perspective(900px) rotateX(58deg); transform-origin: 50% 100%">
 <div style="background: #faf6ec; border-radius: 3px; box-shadow: 0 3px 0 #d6cbb3"></div>
 <div style="background: #faf6ec; border-radius: 3px; box-shadow: 0 3px 0 #d6cbb3"></div>
 <div style="background: #faf6ec; border-radius: 3px; box-shadow: 0 3px 0 #d6cbb3"></div>
@@ -192,8 +301,13 @@ START
 <div style="background: #faf6ec; border-radius: 3px; box-shadow: 0 3px 0 #d6cbb3"></div>
 <div style="background: #faf6ec; border-radius: 3px; box-shadow: 0 3px 0 #d6cbb3"></div>
 </div>
+</div>
 
-<div aria-hidden="true" style="position: absolute; left: 940px; top: 676px; width: 48px; height: 70px; box-sizing: border-box; background: #efe6d2; border: 3px solid #c9bc9f; border-radius: 24px 24px 22px 22px; box-shadow: inset -5px -5px 0 #ddd1b7"></div>
+<div aria-hidden="true" style="position: absolute; left: 938px; top: 694px; width: 54px; height: 60px">
+<div style="position: absolute; left: 1px; right: 1px; bottom: -5px; height: 13px; border-radius: 50%; background: rgba(0,0,0,0.6); filter: blur(5px)"></div>
+<div style="position: absolute; left: 4px; right: 4px; bottom: 0; height: 15px; background: linear-gradient(180deg, #e2d7bf 0%, #bdb094 100%); border-radius: 0 0 20px 20px"></div>
+<div style="position: absolute; left: 0; bottom: 11px; width: 54px; height: 70px; box-sizing: border-box; background: #efe6d2; border: 3px solid #c9bc9f; border-radius: 26px 26px 22px 22px; box-shadow: inset -5px -5px 0 #ddd1b7; transform: perspective(700px) rotateX(58deg); transform-origin: 50% 100%"></div>
+</div>
 
 <div style="position: absolute; left: 60px; top: 538px; width: 224px; height: 80px">
 <div aria-hidden="true" style="position: absolute; left: 4px; right: 4px; bottom: -2px; height: 8px; border-radius: 50%; background: rgba(0,0,0,0.7); filter: blur(4px)"></div>
@@ -206,6 +320,7 @@ START
 
 <div role="img" aria-label="Favorite movies on VHS: Mulholland Drive, Magnolia, Digger" style="position: absolute; left: 0; top: 0; width: 0; height: 0">
 <div aria-hidden="true" style="position: absolute; left: 1036px; top: 646px; width: 210px; height: 10px; border-radius: 50%; background: rgba(0,0,0,0.7); filter: blur(5px)"></div>
+<div aria-hidden="true" style="position: absolute; left: 1036px; top: 549px; width: 196px; height: 14px; background: linear-gradient(180deg, #3a3a3f 0%, #1c1c20 100%); clip-path: polygon(6% 0, 94% 0, 100% 100%, 0 100%)"></div>
 <div style="position: absolute; left: 1036px; top: 562px; width: 196px; height: 30px; box-sizing: border-box; background: #141416; border-radius: 3px; box-shadow: inset 0 2px 0 #2a2a2e, inset 0 -3px 0 #08080a; transform: rotate(-0.5deg); padding: 5px 10px 6px">
 <div style="height: 100%; box-sizing: border-box; background: #f1ead8; border-left: 8px solid #6b4fd6; border-radius: 1px; display: flex; align-items: center; padding: 0 8px; font-family: 'Permanent Marker', cursive; font-size: 13px; line-height: 1; letter-spacing: 0.04em; color: #1a1a1a; white-space: nowrap">MULHOLLAND DRIVE</div>
 </div>
@@ -217,21 +332,6 @@ START
 </div>
 </div>
 
-<svg aria-hidden="true" viewBox="0 0 1280 800" style="position: absolute; left: 0; top: 0; width: 1280px; height: 800px; pointer-events: none">
-<defs><path id="mv-lan1" d="M 196 666 C 120 610, 14 628, 24 690 C 34 750, 168 752, 198 684"></path><path id="mv-lan2" d="M 196 672 C 128 626, 30 640, 38 690 C 46 738, 162 740, 196 680"></path></defs>
-<use href="#mv-lan2" fill="none" stroke="#7e211b" stroke-width="10" stroke-linecap="round"></use>
-<use href="#mv-lan1" fill="none" stroke="#9e2a22" stroke-width="11" stroke-linecap="round"></use>
-<text font-family="VT323, monospace" font-size="9" letter-spacing="1" fill="#f4e3b0" dy="3"><textPath href="#mv-lan1">COWBOYS MUSIC FESTIVAL · COWBOYS MUSIC FESTIVAL · COWBOYS MUSIC FESTIVAL · COWBOYS MUSIC FESTIVAL · </textPath></text>
-<rect x="190" y="662" width="14" height="26" rx="3" fill="#c9c9cc"></rect>
-<rect x="194" y="668" width="6" height="14" rx="2" fill="#9a9aa0"></rect>
-</svg>
-<div role="img" aria-label="Cowboys Music Festival all-access lanyard" style="position: absolute; left: 212px; top: 628px; width: 64px; height: 90px; box-sizing: border-box; background: #f4f1ea; border: 2px solid rgba(255,255,255,0.7); border-radius: 4px; box-shadow: 3px 4px 6px rgba(0,0,0,0.6); transform: rotate(-78deg); overflow: hidden; display: flex; flex-direction: column; align-items: center">
-<div style="width: 100%; background: #9e2a22; color: #f4e3b0; font-family: 'VT323', monospace; font-size: 11px; line-height: 0.95; text-align: center; padding: 3px 2px">COWBOYS<br>MUSIC FEST</div>
-<div style="margin-top: 8px; font-family: 'Press Start 2P', monospace; font-size: 7px; line-height: 1.5; text-align: center; color: #1a1a1a">ALL<br>ACCESS</div>
-<div style="margin-top: 6px; width: 40px; height: 3px; background: #c9c0ad"></div>
-<div style="margin-top: 5px; font-family: 'VT323', monospace; font-size: 12px; line-height: 1; color: #3a3a3e">MAXIMUS V.</div>
-</div>
-
 <footer style="position: absolute; left: 0; right: 0; bottom: 18px; text-align: center; font-family: 'Press Start 2P', monospace; font-size: 10px; letter-spacing: 0.14em; color: #e6dccb">© 2026 MAXIMUS VICKERS · <a href="mailto:maximus@fourmeasure.com" style="color: #e6dccb; text-transform: lowercase">maximus@fourmeasure.com</a></footer>
 
 </div>
@@ -240,29 +340,39 @@ START
 
 <div aria-hidden="true" style="position: absolute; left: 0; right: 0; top: 540px; bottom: 0; background: #1a1a1d; border-top: 5px solid #2e2e33"></div>
 
-<svg aria-hidden="true" viewBox="0 0 390 844" style="position: absolute; left: 0; top: 0; width: 390px; height: 844px; pointer-events: none"><path d="M 150 586 C 150 566, 178 572, 190 540" fill="none" stroke="#b9ad92" stroke-width="6" stroke-linecap="round"></path><path d="M 150 586 C 150 566, 178 572, 190 540" fill="none" stroke="#e9e1cf" stroke-width="3" stroke-linecap="round"></path></svg>
+<svg aria-hidden="true" viewBox="0 0 390 844" style="position: absolute; left: 0; top: 0; width: 390px; height: 844px; pointer-events: none"><path d="M 150 616 C 150 588, 178 578, 190 544" fill="none" stroke="#b9ad92" stroke-width="6" stroke-linecap="round"></path><path d="M 150 616 C 150 588, 178 578, 190 544" fill="none" stroke="#e9e1cf" stroke-width="3" stroke-linecap="round"></path></svg>
 <div aria-hidden="true" style="position: absolute; left: 125px; top: 506px; width: 140px; height: 28px; background: #e3d9c3; border-left: 3px solid #c9bc9f; border-right: 3px solid #c9bc9f; box-sizing: border-box"></div>
 <div aria-hidden="true" style="position: absolute; left: 85px; top: 528px; width: 220px; height: 20px; box-sizing: border-box; background: #efe6d2; border: 3px solid #c9bc9f; border-radius: 10px 10px 5px 5px; box-shadow: inset 0 -5px 0 #ddd1b7"></div>
 
 <div style="position: absolute; left: 15px; top: 170px; width: 360px; height: 340px; box-sizing: border-box; background: #efe6d2; border: 3px solid #c9bc9f; border-radius: 18px; box-shadow: inset -9px -9px 0 #ddd1b7, inset 4px 4px 0 #faf5ea; padding: 20px 20px 0 20px">
 
-<div style="position: relative; width: 314px; height: 272px; box-sizing: border-box; border: 6px solid #d4c8ad; border-radius: 12px; overflow: hidden; background: #0e0e11; box-shadow: inset 0 0 30px rgba(0,0,0,0.45)">
+<div style="position: relative; width: 314px; height: 272px; box-sizing: border-box; border: 6px solid #d4c8ad; border-radius: 12px; overflow: hidden; background: #0e0e11 url('wallpaper-bliss.jpg') center center / cover no-repeat; box-shadow: inset 0 0 30px rgba(0,0,0,0.45)">
 <div class="mv-scan" aria-hidden="true" style="position: absolute; inset: 0; pointer-events: none; z-index: 20; box-shadow: inset 0 0 30px rgba(0,0,0,0.4)"></div>
 
 <nav aria-label="Apps" style="position: absolute; left: 8px; top: 10px; display: flex; flex-direction: column; gap: 8px; z-index: 5">
-<a class="mv-app" target="_blank" rel="noopener noreferrer" href="https://apps.apple.com/us/app/fourmeasure/id6754608076" style="display: flex; flex-direction: column; align-items: center; gap: 3px; width: 84px; text-decoration: none; color: #ffffff">
-<img src="icon-fourmeasure.webp" alt="" style="display: block; width: 44px; height: 44px; border-radius: 22%; box-shadow: 0 2px 0 rgba(0,0,0,0.35)">
+<a class="mv-app" target="_blank" rel="noopener noreferrer" href="https://app.fourmeasure.com/maximus" style="display: flex; flex-direction: column; align-items: center; gap: 3px; width: 84px; text-decoration: none; color: #ffffff">
+<img src="icon-fourmeasure.webp" alt="" style="display: block; width: 44px; height: 44px; border-radius: 22%">
 <span class="mv-app-label" style="padding: 0 3px; font-family: 'VT323', monospace; font-size: 16px; line-height: 1.1; letter-spacing: 1px; text-shadow: 1px 1px 0 #000000">FourMeasure</span>
 </a>
 <a class="mv-app" target="_blank" rel="noopener noreferrer" href="https://www.instagram.com/maximussss__/" style="display: flex; flex-direction: column; align-items: center; gap: 3px; width: 84px; text-decoration: none; color: #ffffff">
-<img src="icon-instagram.webp" alt="" style="display: block; width: 44px; height: 44px; border-radius: 22%; box-shadow: 0 2px 0 rgba(0,0,0,0.35)">
+<img src="icon-instagram-retro.png" alt="" style="display: block; width: 44px; height: 44px; border-radius: 22%">
 <span class="mv-app-label" style="padding: 0 3px; font-family: 'VT323', monospace; font-size: 16px; line-height: 1.1; letter-spacing: 1px; text-shadow: 1px 1px 0 #000000">Instagram</span>
 </a>
 <a class="mv-app" target="_blank" rel="noopener noreferrer" href="https://www.linkedin.com/in/maximus-vickers-bb69672b1" style="display: flex; flex-direction: column; align-items: center; gap: 3px; width: 84px; text-decoration: none; color: #ffffff">
-<img src="icon-linkedin.webp" alt="" style="display: block; width: 44px; height: 44px; border-radius: 22%; box-shadow: 0 2px 0 rgba(0,0,0,0.35)">
+<img src="icon-linkedin.webp" alt="" style="display: block; width: 44px; height: 44px; border-radius: 22%">
 <span class="mv-app-label" style="padding: 0 3px; font-family: 'VT323', monospace; font-size: 16px; line-height: 1.1; letter-spacing: 1px; text-shadow: 1px 1px 0 #000000">LinkedIn</span>
 </a>
 </nav>
+<a class="mv-app" target="_blank" rel="noopener noreferrer" href="https://poker-mentor-ten.vercel.app/" style="position: absolute; left: 100px; top: 155px; display: flex; flex-direction: column; align-items: center; gap: 3px; width: 96px; text-decoration: none; color: #ffffff; z-index: 5">
+<img src="icon-pocket-theory.png" alt="" style="display: block; width: 44px; height: 44px; border-radius: 22%">
+<span class="mv-app-label" style="padding: 0 3px; font-family: 'VT323', monospace; font-size: 16px; line-height: 1.1; letter-spacing: 1px; text-shadow: 1px 1px 0 #000000">Pocket Theory</span>
+</a>
+<div class="mv-cursor mv-cursor-m" aria-hidden="true">
+<span class="mv-ring" style="left: -8px; top: -8px; width: 16px; height: 16px"></span>
+<svg class="mv-ptr" viewBox="0 0 12 18" style="width: 11px; height: 16px">
+<path d="M1 1 L1 15 L4.6 11.6 L7 16.8 L9.4 15.7 L7.1 10.7 L11.4 10.5 Z" fill="#ffffff" stroke="#15161a" stroke-width="1.2" stroke-linejoin="round"></path>
+</svg>
+</div>
 
 <div style="position: absolute; left: 0; right: 0; bottom: 0; height: 30px; box-sizing: border-box; background: #cdc6b4; border-top: 2px solid #f6f2e8; display: flex; align-items: center; justify-content: space-between; padding: 0 4px; z-index: 10">
 <button type="button" style="display: flex; align-items: center; gap: 5px; height: 22px; padding: 0 6px; background: #cdc6b4; border: 2px solid; border-color: #f6f2e8 #6e675a #6e675a #f6f2e8; font-family: 'Press Start 2P', monospace; font-size: 8px; color: #1a1a1a; cursor: pointer">
@@ -295,7 +405,10 @@ START
 </div>
 </div>
 
-<div aria-hidden="true" style="position: absolute; left: 35px; top: 582px; width: 320px; height: 84px; box-sizing: border-box; background: #efe6d2; border: 3px solid #c9bc9f; border-radius: 8px; box-shadow: inset -5px -5px 0 #ddd1b7; padding: 8px 10px; display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 4px">
+<div aria-hidden="true" style="position: absolute; left: 35px; top: 590px; width: 320px; height: 78px">
+<div style="position: absolute; left: 12px; right: 12px; bottom: -6px; height: 12px; border-radius: 50%; background: rgba(0,0,0,0.6); filter: blur(6px)"></div>
+<div style="position: absolute; left: 8px; right: 8px; bottom: 0; height: 14px; background: linear-gradient(180deg, #e2d7bf 0%, #bdb094 100%); border-radius: 0 0 7px 7px; box-shadow: inset 0 -2px 0 #a2957b"></div>
+<div style="position: absolute; left: 0; bottom: 10px; width: 320px; height: 84px; box-sizing: border-box; background: #efe6d2; border: 3px solid #c9bc9f; border-radius: 8px; box-shadow: inset -5px -5px 0 #ddd1b7; padding: 8px 10px; display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 4px; transform: perspective(700px) rotateX(58deg); transform-origin: 50% 100%">
 <div style="background: #faf6ec; border-radius: 2px; box-shadow: 0 2px 0 #d6cbb3"></div>
 <div style="background: #faf6ec; border-radius: 2px; box-shadow: 0 2px 0 #d6cbb3"></div>
 <div style="background: #faf6ec; border-radius: 2px; box-shadow: 0 2px 0 #d6cbb3"></div>
@@ -336,6 +449,7 @@ START
 <div style="background: #faf6ec; border-radius: 2px; box-shadow: 0 2px 0 #d6cbb3"></div>
 <div style="background: #faf6ec; border-radius: 2px; box-shadow: 0 2px 0 #d6cbb3"></div>
 <div style="background: #faf6ec; border-radius: 2px; box-shadow: 0 2px 0 #d6cbb3"></div>
+</div>
 </div>
 
 <div style="position: absolute; left: 122px; top: 694px; width: 140px; height: 74px">
